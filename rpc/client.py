@@ -69,7 +69,7 @@ class JsonRpcClient:
 
         if response.status >= 400:
             raise JsonRpcTransportError(
-                f'Ошибка HTTP: {response.status}\n{response.reason}\n{response_data}'
+                f'Ошибка HTTP: {response.status} {response.reason}\n{response_data}'
             )
 
         try:
