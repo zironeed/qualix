@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <body>
+        <form method="POST">
+            {% csrf_token %}
+            <table>
+                {{ form.as_table }}
+            </table>
+            <input type="submit" value="Submit">
+        </form>
+        <div class="box">
+        {% if result %}
+            <h3>Результат:</h3>
+            <pre>{{ result }}</pre>
+        {% elif error %}
+            <h3>Ошибка:</h3>
+            <pre>{{ error }}</pre>
+        {% endif %}
+        </div>
+    </body>
+</html>
