@@ -3,6 +3,7 @@ from django.views.generic import FormView
 from config import settings
 from rpc.client import JsonRpcClient
 from rpc.exceptions import JsonRpcError
+from rpc.transport import HttpsTransport
 from web.forms import RequestCallJsonRpcForm
 
 
@@ -15,9 +16,12 @@ class GetIndexView(FormView):
 
         try:
             with JsonRpcClient(
-                settings.JSON_RPC_ENDPOINT,
-                settings.JSON_RPC_CERTIFICATE,
-                settings.JSON_RPC_PRIVATE_KEY
+                    settings.JSON_RPC_ENDPOINT,
+                    HttpsTransport(
+                        settings.JSON_RPC_ENDPOINT,
+                        settings.JSON_RPC_CERTIFICATE,
+                        settings.JSON_RPC_PRIVATE_KEY
+                    )
             ) as client:
                 result = client.call(cleaned_data['method_name'], cleaned_data['parameters'])
         except JsonRpcError as e:
