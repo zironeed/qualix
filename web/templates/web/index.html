@@ -1,25 +1,266 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Title</title>
-    </head>
-    <body>
-        <form method="POST">
-            {% csrf_token %}
-            <table>
-                {{ form.as_table }}
-            </table>
-            <input type="submit" value="Submit">
-        </form>
-        <div class="box">
-        {% if result %}
-            <h3>Результат:</h3>
-            <pre>{{ result }}</pre>
-        {% elif error %}
-            <h3>Ошибка:</h3>
-            <pre>{{ error }}</pre>
-        {% endif %}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Форма</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+
+            padding: 60px 20px;
+
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                         Roboto, Arial, sans-serif;
+
+            background: #f4f6f8;
+            color: #1f2937;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 700px;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 32px;
+
+            box-shadow:
+                0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            margin: 0 0 28px;
+            color: #6b7280;
+            font-size: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 16px;
+        }
+
+        th {
+            width: 35%;
+            padding-right: 16px;
+
+            text-align: left;
+            vertical-align: middle;
+
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        td {
+            width: 65%;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 11px 13px;
+
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+
+            background: #fff;
+            color: #111827;
+
+            font: inherit;
+
+            outline: none;
+            transition:
+                border-color 0.15s ease,
+                box-shadow 0.15s ease;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: #6366f1;
+
+            box-shadow:
+                0 0 0 3px rgba(99, 102, 241, 0.15);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        input[type="checkbox"] {
+            width: auto;
+        }
+
+        .submit {
+            width: 100%;
+            margin-top: 10px;
+
+            padding: 12px 18px;
+
+            border: none;
+            border-radius: 9px;
+
+            background: #4f46e5;
+            color: white;
+
+            font-size: 15px;
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition:
+                background 0.15s ease,
+                transform 0.1s ease;
+        }
+
+        .submit:hover {
+            background: #4338ca;
+        }
+
+        .submit:active {
+            transform: translateY(1px);
+        }
+
+        .box {
+            margin-top: 24px;
+            padding: 20px;
+
+            border-radius: 12px;
+
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+        }
+
+        .box h3 {
+            margin: 0 0 12px;
+            font-size: 17px;
+        }
+
+        .result {
+            border-color: #bbf7d0;
+            background: #f0fdf4;
+        }
+
+        .result h3 {
+            color: #166534;
+        }
+
+        .error {
+            border-color: #fecaca;
+            background: #fef2f2;
+        }
+
+        .error h3 {
+            color: #b91c1c;
+        }
+
+        pre {
+            margin: 0;
+
+            padding: 14px;
+
+            overflow-x: auto;
+
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.04);
+
+            font-family: "JetBrains Mono", "Fira Code",
+                         Consolas, monospace;
+            font-size: 13px;
+            line-height: 1.5;
+
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 20px 12px;
+            }
+
+            .card {
+                padding: 22px 18px;
+            }
+
+            table,
+            tbody,
+            tr,
+            th,
+            td {
+                display: block;
+                width: 100%;
+            }
+
+            th {
+                padding: 0 0 6px;
+            }
+
+            table {
+                border-spacing: 0;
+            }
+
+            tr {
+                margin-bottom: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Форма</h1>
+            <p class="subtitle">
+                Заполните необходимые поля и отправьте форму
+            </p>
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <table>
+                    {{ form.as_table }}
+                </table>
+
+                <button type="submit" class="submit">
+                    Отправить
+                </button>
+            </form>
+
+            {% if result %}
+                <div class="box result">
+                    <h3>✓ Результат</h3>
+                    <pre>{{ result }}</pre>
+                </div>
+            {% elif error %}
+                <div class="box error">
+                    <h3>✕ Ошибка</h3>
+                    <pre>{{ error }}</pre>
+                </div>
+            {% endif %}
         </div>
-    </body>
+    </div>
+</body>
 </html>
